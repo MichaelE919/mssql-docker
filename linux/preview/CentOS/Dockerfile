@@ -19,7 +19,8 @@ LABEL name="microsoft/mssql-server-linux" \
         -p 1433:1433 \
         -d  ${IMAGE}' \
       io.k8s.description="MS SQL Server is ....." \
-      io.k8s.display-name="MS SQL Server"
+      io.k8s.display-name="MS SQL Server" \
+      maintainer="Michael Eichenberger mikeetpt@gmail.com"
 
 # Install latest mssql-server package
 RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo && \
@@ -31,6 +32,13 @@ COPY uid_entrypoint /opt/mssql-tools/bin/
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
 RUN mkdir -p /var/opt/mssql/data && \
     chmod -R g=u /var/opt/mssql /etc/passwd
+
+# Copy odbcadd.txt file
+COPY ./odbcadd.txt /home
+
+# Register the SQL Server database DSN information in /etc/odbc.ini
+RUN odbcinst -i -s -f /home/odbcadd.txt -l && \
+    rm /home/odbcadd.txt
 
 ### Containers should not run as root as a good practice
 USER 10001
