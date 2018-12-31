@@ -25,7 +25,7 @@ LABEL name="microsoft/mssql-server-linux" \
 # Install latest mssql-server package
 RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo && \
     curl -o /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/7/prod.repo && \
-    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools unixODBC-devel krb5-workstation && \
+    ACCEPT_EULA=Y yum install -y mssql-server mssql-tools unixODBC-devel krb5-workstation strace && \
     yum clean all
 
 COPY uid_entrypoint /opt/mssql-tools/bin/
@@ -57,6 +57,7 @@ EXPOSE 1433
 VOLUME /var/opt/mssql/data
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
-ENTRYPOINT [ "uid_entrypoint" ]
+# ENTRYPOINT [ "uid_entrypoint" ]
 # Run SQL Server process
-CMD sqlservr
+# CMD sqlservr
+CMD strace isql -v devapppbi
