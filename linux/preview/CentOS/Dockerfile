@@ -39,6 +39,7 @@ COPY krb5.conf /etc
 # Add keytab file
 RUN mkdir /krb5 && chmod 755 /krb5
 COPY ./trsgek.keytab /krb5
+RUN chown -R 10001:0 /krb5 && chmod -R og+rwx /krb5
 
 # Copy odbcadd.txt file
 COPY ./odbcadd.txt /home
