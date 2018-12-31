@@ -34,7 +34,7 @@ RUN mkdir -p /var/opt/mssql/data && \
     chmod -R g=u /var/opt/mssql /etc/passwd
 
 # Copy krb5.conf file
-COPY krb5.conf /etc
+COPY krb5.conf /home
 
 # Add keytab file
 RUN mkdir /krb5 && chmod 755 /krb5
